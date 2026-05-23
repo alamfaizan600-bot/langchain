@@ -56,7 +56,12 @@ def run_llm(query: str) -> Dict[str, Any]:
     )
     messages = [{"role": "user", "content": query}]
     response = agent.invoke({"messages": messages})
-    answer = response["messages"][-1].content
+    last_content = response["messages"][-1].content
+
+    if isinstance(last_content, list):
+        answer = last_content[0]["text"]
+    else:
+        answer = last_content
 
     context_docs = []
     for message in response["messages"]:
